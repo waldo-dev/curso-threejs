@@ -40,7 +40,7 @@ export const Scene = () => {
     const doorNormalTexture = textureLoader.load("/textures/normal.jpg")
     const doorRoughnessTexture = textureLoader.load("/textures/roughness.jpg")
     const matcapTexture = textureLoader.load("/textures/matcap/matcap.png")
-    //const gradientTexture = textureLoader.load("/textures/gradients/3.jpg")
+    const gradientTexture = textureLoader.load("/textures/gradients/3.jpg")
 
     //Materials
     //const material = new THREE.MeshBasicMaterial({
