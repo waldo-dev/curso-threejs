@@ -43,21 +43,38 @@ export const Scene = () => {
     const gradientTexture = textureLoader.load("/textures/gradients/3.jpg")
 
     //Materials
-    //const material = new THREE.MeshBasicMaterial({
-    //map: doorColorTexture,
-    //color: 0xff0000,
-    //})
-    //const material = new THREE.MeshNormalMaterial({
-    //  flatShading: true,
-    //})
-    //const material = new THREE.MeshMatcapMaterial({
-    //  matcap: matcapTexture,
-    //})
-    //const material = new THREE.MeshLambertMaterial()
-    //const material = new THREE.MeshPhongMaterial()
-    //material.shininess = 100
-    //material.specular = new THREE.Color(0x1188ff)
+    /*
+    Material basico
+    const material = new THREE.MeshBasicMaterial({
+    map: doorColorTexture,
+    color: 0xff0000,
+    })
+
+     Material para ver como añadir luces entre otras cosas
+    const material = new THREE.MeshNormalMaterial({
+      flatShading: true,
+    })
+
+     Material que carga una imagen y mantiene efecto de luces
+    const material = new THREE.MeshMatcapMaterial({
+      matcap: matcapTexture,
+    })
+
+     Material que reacciona a la luz 
+    const material = new THREE.MeshLambertMaterial()
+
+     Material que reacciona a la luz pero más realista
+    const material = new THREE.MeshPhongMaterial()
+    material.shininess = 100
+    material.specular = new THREE.Color(0x1188ff)
+    */
+    // Material estilo caricatura
     const material = new THREE.MeshToonMaterial()
+    // material.gradientMap = gradientTexture
+    // gradientTexture.minFilter = THREE.NearestFilter
+    // gradientTexture.magFilter = THREE.NearestFilter
+    // gradientTexture.generateMipmaps = false
+    // const gradientTexture = textureLoader.load('/textures/gradients/5.jpg')
 
     //Lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
