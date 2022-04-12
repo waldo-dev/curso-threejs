@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react"
 import * as THREE from "three"
 import "./Scene.css"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
+import * as dat from "dat.gui"
 
 export const Scene = () => {
   const mountRef = useRef(null)
@@ -32,15 +33,21 @@ export const Scene = () => {
     //Textures
     const textureLoader = new THREE.TextureLoader()
 
-    const doorColorTexture = textureLoader.load("/textures/basecolor.jpg")
+    const doorColorTexture = textureLoader.load("/textures/door/color.jpg")
+    const doorAlphaTexture = textureLoader.load("/textures/door/alpha.jpg")
     const doorAmbientOcclusionTexture = textureLoader.load(
-      "/textures/ambientOcclusion.jpg"
+      "/textures/door/ambientOcclusion.jpg"
     )
-    const doorHeightTexture = textureLoader.load("/textures/height.png")
-    const doorNormalTexture = textureLoader.load("/textures/normal.jpg")
-    const doorRoughnessTexture = textureLoader.load("/textures/roughness.jpg")
-    const matcapTexture = textureLoader.load("/textures/matcap/matcap.png")
-    const gradientTexture = textureLoader.load("/textures/gradients/3.jpg")
+    const doorHeightTexture = textureLoader.load("/textures/door/height.jpg")
+    const doorNormalTexture = textureLoader.load("/textures/door/normal.jpg")
+    const doorMetalnessTexture = textureLoader.load(
+      "/textures/door/metalness.jpg"
+    )
+    const doorRoughnessTexture = textureLoader.load(
+      "/textures/door/roughness.jpg"
+    )
+
+    const matcapTexture = textureLoader.load("/textures/matcaps/2.png")
 
     //Materials
     /*
@@ -68,13 +75,47 @@ export const Scene = () => {
     material.shininess = 100
     material.specular = new THREE.Color(0x1188ff)
     */
+
+    const gui = new dat.GUI()
+
+    const cubeTextureLoader = new THREE.CubeTextureLoader()
+
+    const environmentMapTexture = cubeTextureLoader.load([
+      "/textures/environmentMaps/0/px.jpg",
+      "/textures/environmentMaps/0/nx.jpg",
+      "/textures/environmentMaps/0/py.jpg",
+      "/textures/environmentMaps/0/ny.jpg",
+      "/textures/environmentMaps/0/pz.jpg",
+      "/textures/environmentMaps/0/nz.jpg",
+    ])
+
     // Material estilo caricatura
-    const material = new THREE.MeshToonMaterial()
-    // material.gradientMap = gradientTexture
-    // gradientTexture.minFilter = THREE.NearestFilter
-    // gradientTexture.magFilter = THREE.NearestFilter
-    // gradientTexture.generateMipmaps = false
-    // const gradientTexture = textureLoader.load('/textures/gradients/5.jpg')
+    const material = new THREE.MeshStandardMaterial()
+    material.metalness = 0.7
+    material.roughness = 0.2
+    gui.add(material, "metalness").min(0).max(1).step(0.0001)
+    gui.add(material, "roughness").min(0).max(1).step(0.0001)
+    material.envMap = environmentMapTexture
+
+    /*
+    material.gradientMap = gradientTexture
+    gradientTexture.minFilter = THREE.NearestFilter
+    gradientTexture.magFilter = THREE.NearestFilter
+    gradientTexture.generateMipmaps = false
+    const gradientTexture = textureLoader.load('/textures/gradients/5.jpg')
+    material.metalness = 0
+    material.roughness = 1
+    material.aoMap = doorAmbientOcclusionTexture
+    material.aoMapIntensity = 1
+    material.displacementMap = doorHeightTexture
+    material.displacementScale = 0.05
+    material.metalnessMap = doorMetalnessTexture
+    material.roughnessMap = doorRoughnessTexture
+    material.normalMap = doorNormalTexture
+    material.normalScale.set(0.5, 0.5)
+    material.transparent = true
+    material.alphaMap = doorAlphaTexture
+    */
 
     //Lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
@@ -86,16 +127,19 @@ export const Scene = () => {
     scene.add(pointLight)
 
     const sphere = new THREE.Mesh(
-      new THREE.SphereBufferGeometry(0.5, 16, 16),
+      new THREE.SphereBufferGeometry(0.5, 64, 64),
       material
     )
     sphere.position.x = -1.5
 
-    const plane = new THREE.Mesh(new THREE.PlaneBufferGeometry(1, 1), material)
+    const plane = new THREE.Mesh(
+      new THREE.PlaneBufferGeometry(1, 1, 100, 100),
+      material
+    )
     plane.position.x = 0
 
     const torus = new THREE.Mesh(
-      new THREE.TorusBufferGeometry(0.3, 0.2, 16, 32),
+      new THREE.TorusBufferGeometry(0.3, 0.2, 64, 128),
       material
     )
     torus.position.x = 1.5
@@ -158,9 +202,9 @@ export const Scene = () => {
 
     return () => {
       currentMount.removeChild(canvas)
+      gui.destroy()
     }
   }, [])
 
   return <div ref={mountRef}></div>
 }
-//te amo
